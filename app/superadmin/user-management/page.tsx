@@ -82,7 +82,7 @@ export default function Users() {
         company:
           typeof userDetails.company === "object" &&
           userDetails.company !== null
-            ? userDetails.company.name || "N/A"
+            ? userDetails.company || "N/A"
             : typeof userDetails.company === "string"
             ? userDetails.company
             : "N/A",
