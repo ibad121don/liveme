@@ -62,7 +62,7 @@ export default function UserManagementHeader({ onAddUserClick }: UserManagementH
         {/* Add New User */}
         <button
           onClick={onAddUserClick}
-          className="flex items-center gap-2 px-4 py-2 bg-[#1E3A8A] hover:bg-[#162d6c] text-white text-sm font-medium rounded-lg transition"
+          className="flex items-center gap-2 px-4 py-2 bg-[#1E3A8A] hover:bg-[#162d6c] text-black text-sm font-medium rounded-lg transition"
         >
           <Plus size={16} />
           Add a new user
@@ -72,7 +72,7 @@ export default function UserManagementHeader({ onAddUserClick }: UserManagementH
         <div className="relative" ref={userDropdownRef}>
           <button
             onClick={toggleUserDropdown}
-            className="flex items-center justify-between gap-2 px-4 py-2 text-sm border border-gray-300 rounded-md bg-white hover:bg-gray-100 transition"
+            className="flex items-center text-black justify-between gap-2 px-4 py-2 text-sm border border-gray-300 rounded-md bg-white hover:bg-gray-100 transition"
           >
             <span className="text-gray-700 font-medium">
               {selectedUserFilter}
