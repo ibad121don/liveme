@@ -108,7 +108,7 @@ export default function Users() {
     usersData?.users?.map((user: ApiUser) => ({
       id: user._id,
       name: user.name,
-      company: user.company?.name || "N/A",
+      company: user.company || "N/A",
       role: user.role,
       email: user.email,
       joinedOn: user.joinedOn,
