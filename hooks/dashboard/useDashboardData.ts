@@ -8,7 +8,7 @@ const fetchDashboardData = async (): Promise<DashboardApiResponse> => {
   if (!authToken) {
     throw new Error("Authentication token not found. Please log in.");
   }
-
+console.log("https://liveme-three.vercel.app/api/super-admin/dashboard")
   const response = await fetch("https://liveme-three.vercel.app/api/super-admin/dashboard", { 
     method: "GET",
     headers: {
