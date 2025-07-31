@@ -55,7 +55,7 @@ export const createCompanyApi = async (newCompanyData: any): Promise<any> => {
     throw new Error("Authentication token not found. Please log in.");
   }
 
-  const apiUrl = `${BASE_URL}/api/super-admin/company`;
+  const apiUrl = `https://liveme-three.vercel.app/api/super-admin/company`;
   const response = await fetch(apiUrl, {
     method: "POST",
     headers: {
