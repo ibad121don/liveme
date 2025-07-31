@@ -28,7 +28,7 @@ const createCompanyApi = async (newCompanyData: CreateCompanyPayload): Promise<C
     throw new Error("Authentication token not found. Please log in as a super-admin.");
   }
 
-  const response = await fetch('http://localhost:3000/api/super-admin/company', {
+  const response = await fetch('https://liveme-three.vercel.app/api/super-admin/company', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
