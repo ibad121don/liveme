@@ -11,8 +11,7 @@ import {
   SellerSettingsResponse,
 } from "./userAPITypes";
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "https://liveme-three.vercel.app";
+const BASE_URL ="https://liveme-three.vercel.app";
 
 export const getAuthToken = (): string | null => {
   const token = Cookies.get("authToken");
