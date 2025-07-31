@@ -26,7 +26,8 @@ const addUserApi = async (newUser: AddUserPayload): Promise<ApiResponse> => {
       errorData.message || `Failed to add user: ${response.status}`
     );
   }
-
+const data=response;
+  console.log(data)
   return response.json();
 };
 
