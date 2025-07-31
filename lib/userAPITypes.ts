@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = "https://liveme-three.vercel.app";
 
 export interface ApiUser {
   _id: string;
