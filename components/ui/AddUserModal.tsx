@@ -30,7 +30,7 @@ export default function AddUserModal({ isOpen, onClose, onAdd }: Props) {
     isLoading: isLoadingCompanies,
     error: companiesError,
   } = useCompanies();
-  const companies = companiesData?.companies || [];
+  const companies = companiesData || [];
 
   const [form, setForm] = useState<UserFormData>({
     name: "",
