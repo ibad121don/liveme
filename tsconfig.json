@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+      "noImplicitAny": false,     // allows implicit 'any'
+    "skipLibCheck": true,
      "skipLibCheck": true,
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
