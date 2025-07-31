@@ -77,7 +77,7 @@ export default function Users() {
   useEffect(() => {
     if (userDetails) {
       const mappedUser: UserRow = {
-        id: userDetails._id,
+        id: userDetails.id,
         name: userDetails.name,
         company:
           typeof userDetails.company === "object" &&
@@ -106,7 +106,7 @@ export default function Users() {
 
   const mappedUsers: UserRow[] =
     usersData?.users?.map((user: ApiUser) => ({
-      id: user._id,
+      id: user.id,
       name: user.name,
       company: user.company || "N/A",
       role: user.role,
