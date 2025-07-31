@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export const BASE_URL = "https://liveme-three.vercel.app";
 
 export interface ApiUser {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   role: string;
