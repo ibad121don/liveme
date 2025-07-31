@@ -33,6 +33,8 @@ export const fetchAllCompaniesApi = async (): Promise<any> => {
   }
 
   const apiUrl = `${BASE_URL}/api/super-admin/company`;
+  console.log(apiUrl)
+  console.log(authToken)
   const response = await fetch(apiUrl, {
     method: "GET",
     headers: {
