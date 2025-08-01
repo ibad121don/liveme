@@ -52,13 +52,13 @@ export default function CreateLiveStreamModal({
 let breaktoken=async()=>{
   const tempData =await localStorage.getItem("userData");
   if (tempData) {
-    const user = JSON.parse(tempData);
+   
     alert(tempData)
   }
   const handleSubmit = async () => {
     if (!validate()) return;
  
- 
+   const tempData =await localStorage.getItem("userData");
   if (tempData) {
     const user = JSON.parse(tempData);
     console.log("asdasjd");
