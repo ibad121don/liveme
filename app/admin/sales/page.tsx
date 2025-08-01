@@ -7,7 +7,6 @@ import SalesHeader from "@/components/ui/AdminSalesHeader";
 import SuccessModal from "@/components/ui/SuccessModal";
 import StreamDetailsModal from "@/components/ui/StreamDetailsModal";
 import { useSales } from "@/hooks/admin/Sales/useSales";
-import { getAuthToken } from "@/lib/api";
 
 const salesColumns = [
   { label: "Date", key: "date" },
@@ -39,20 +38,9 @@ interface SalesRow {
   [key: string]: string | string[] | number | undefined;
 }
 
-interface SalesDisplayRow {
-  id: string;
-  _id: string;
-  date: string;
-  seller: string;
-  platform: string;
-  sales: number;
+interface SalesDisplayRow extends SalesRow {
   revenue: string;
   profit: string;
-  year: number;
-  adminStatus: "Pending" | "Approved" | "Rejected";
-  status: "Pending" | "Approved" | "Rejected";
-  dropdownActions?: string[];
-  [key: string]: string | string[] | number | undefined;
 }
 
 const statusColorMap = {
@@ -63,16 +51,27 @@ const statusColorMap = {
 
 export default function ManageSales() {
   const { sales, isLoading, isError, error, updateStatus } = useSales();
-const [companyId, setCompanyId] = useState<string | null>(null);
+
+  const [companyId, setCompanyId] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedSale, setSelectedSale] = useState<SalesRow | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 15;
-    useEffect(()=>{breaktoken()},[])
-    const filteredSales = sales.filter(
-  (s: any) => s.companyId === companyId
-);
+
+  // Fetch token and set company ID
+  useEffect(() => {
+    const breaktoken = async () => {
+      const tempData = await localStorage.getItem("userData");
+      if (tempData) {
+        const user = JSON.parse(tempData);
+        setCompanyId(user?.user?.companyId || null);
+      }
+    };
+    breaktoken();
+  }, []);
+
+  const filteredSales = sales.filter((s: any) => s.companyId === companyId);
 
   const salesRows: SalesRow[] = filteredSales.map((s: any) => {
     const totalSalesFromBreaks =
@@ -99,31 +98,13 @@ const [companyId, setCompanyId] = useState<string | null>(null);
 
     const totalUnitsSold = totalSalesFromBreaks + totalSalesFromDirect;
 
-    // Calculate total revenue
-    const totalRevenueFromBreaks =
-      s.salesBreak?.reduce((acc: number, item: any) => {
-        return acc + (item.totalCost || 0);
-      }, 0) || 0;
+    const totalRevenue =
+      (s.salesBreak?.reduce((acc: number, item: any) => acc + (item.totalCost || 0), 0) || 0) +
+      (s.directSale?.reduce((acc: number, item: any) => acc + (item.subtotal || 0), 0) || 0);
 
-    const totalRevenueFromDirect =
-      s.directSale?.reduce((acc: number, item: any) => {
-        return acc + (item.subtotal || 0);
-      }, 0) || 0;
-
-    const totalRevenue = totalRevenueFromBreaks + totalRevenueFromDirect;
-
-    // Calculate total profit
-    const totalProfitFromBreaks =
-      s.salesBreak?.reduce((acc: number, item: any) => {
-        return acc + (item.estimatedProfit || 0);
-      }, 0) || 0;
-
-    const totalProfitFromDirect =
-      s.directSale?.reduce((acc: number, item: any) => {
-        return acc + (item.estimatedProfit || 0);
-      }, 0) || 0;
-
-    const totalProfit = totalProfitFromBreaks + totalProfitFromDirect;
+    const totalProfit =
+      (s.salesBreak?.reduce((acc: number, item: any) => acc + (item.estimatedProfit || 0), 0) || 0) +
+      (s.directSale?.reduce((acc: number, item: any) => acc + (item.estimatedProfit || 0), 0) || 0);
 
     return {
       id: s._id,
@@ -148,25 +129,10 @@ const [companyId, setCompanyId] = useState<string | null>(null);
     currentPage * pageSize,
     currentPage * pageSize + pageSize
   );
-  useEffect(()=>{breaktoken()},[])
-let breaktoken=async()=>{
-  const tempData =await localStorage.getItem("userData");
-  if (tempData) {
-    const user = JSON.parse(tempData);
-    setCompanyId(user?.user?.companyId || null);
-  }
-  
 
-  
-  
-  
-}
-  //  Accept, Reject, or View
   const handleActionClick = (row: SalesDisplayRow, action: string) => {
-    // console.log(row,action);
-    
     if (action === "Accept Report") {
-      updateStatus.mutate({ id: row._id, status: "approved" });
+      updateStatus.mutate({ id: row._id, status: "Approved" });
       setSuccessMessage("Report accepted successfully!");
     } else if (action === "Reject Report") {
       updateStatus.mutate({ id: row._id, status: "Rejected" });
@@ -180,7 +146,6 @@ let breaktoken=async()=>{
     }
   };
 
-  // Auto-close success toast
   useEffect(() => {
     if (successMessage) {
       const timeout = setTimeout(() => setSuccessMessage(""), 2000);
@@ -188,12 +153,10 @@ let breaktoken=async()=>{
     }
   }, [successMessage]);
 
-  // Calculate total revenue
   const totalRevenue = useMemo(() => {
     return salesRows.reduce((acc, row) => acc + (Number(row.revenue) || 0), 0);
   }, [salesRows]);
 
-  // Calculate unique pending sellers
   const pendingSellersCount = useMemo(() => {
     const pendingSellers = new Set(
       salesRows
@@ -204,15 +167,11 @@ let breaktoken=async()=>{
   }, [salesRows]);
 
   if (isLoading) return <div>Loading sales...</div>;
-  if (isError)
-    return <div>Error loading sales: {(error as Error).message}</div>;
+  if (isError) return <div>Error loading sales: {(error as Error).message}</div>;
 
   return (
     <div className="flex flex-col gap-6">
-      <SalesHeader
-        totalRevenue={totalRevenue}
-        pendingSellers={pendingSellersCount}
-      />
+      <SalesHeader totalRevenue={totalRevenue} pendingSellers={pendingSellersCount} />
 
       <DataTableCard<SalesDisplayRow>
         columns={salesColumns}
