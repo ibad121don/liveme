@@ -63,13 +63,18 @@ const statusColorMap = {
 
 export default function ManageSales() {
   const { sales, isLoading, isError, error, updateStatus } = useSales();
-
+const [companyId, setCompanyId] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedSale, setSelectedSale] = useState<SalesRow | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 15;
-  const salesRows: SalesRow[] = sales.map((s: any) => {
+    useEffect(()=>{breaktoken()},[])
+    const filteredSales = sales.filter(
+  (s: any) => s.companyId === companyId
+);
+
+  const salesRows: SalesRow[] = filteredSales.map((s: any) => {
     const totalSalesFromBreaks =
       s.salesBreak?.reduce((acc: number, breakItem: any) => {
         return (
@@ -145,7 +150,13 @@ export default function ManageSales() {
   );
   useEffect(()=>{breaktoken()},[])
 let breaktoken=async()=>{
-  console.log(localStorage.getItem("userData"));
+  const tempData =await localStorage.getItem("userData");
+  if (tempData) {
+    const user = JSON.parse(tempData);
+    setCompanyId(user?.user?.companyId || null);
+  }
+  
+
   
   
   
