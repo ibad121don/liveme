@@ -34,6 +34,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { streamTitle, date, platform,name } = body;
     let datauser = await User.findById(decoded.id);
+ console.log("sdkds",body);
  
 
     // You can now access decoded fields like decoded.userId, decoded.companyId, etc.

@@ -332,6 +332,7 @@ export async function createStream(data: {
   streamTitle: string;
   date: string;
   platform: string;
+  name:string
 }) {
   const token = getAuthToken();
   console.log(data);
