@@ -54,6 +54,8 @@ export default function CreateLiveStreamModal({
     const tempData =await localStorage.getItem("userData");
  
     const user = JSON.parse(tempData);
+    console.log("asdasjd");
+    
     console.log({ streamTitle, date: streamDate, platform,name:user?.user?.name });
     
     createStream({ streamTitle, date: streamDate, platform,name:user.user.name });
