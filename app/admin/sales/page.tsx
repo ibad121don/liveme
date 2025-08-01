@@ -30,8 +30,8 @@ interface SalesRow {
   revenue: number;
   profit: number;
   year: number;
-  adminStatus: "Pending" | "Approved" | "Rejected";
-  status: "Pending" | "Approved" | "Rejected";
+  adminStatus: "pending" | "approved" | "rejected";
+  status: "pending" | "approved" | "rejected";
   salesBreak: any[];
   directSale: any[];
   dropdownActions?: string[];
@@ -44,9 +44,9 @@ interface SalesDisplayRow extends SalesRow {
 }
 
 const statusColorMap = {
-  pending: "#FACC15",
-  approved: "#22C55E",
-  rejected: "#EF4444",
+  Pending: "#FACC15",
+  Approved: "#22C55E",
+  Rejected: "#EF4444",
 };
 
 export default function ManageSales() {
@@ -105,6 +105,8 @@ export default function ManageSales() {
       (s.salesBreak?.reduce((acc: number, item: any) => acc + (item.estimatedProfit || 0), 0) || 0) +
       (s.directSale?.reduce((acc: number, item: any) => acc + (item.estimatedProfit || 0), 0) || 0);
 
+    const status = s.adminStatus?.toLowerCase() || "pending";
+
     return {
       id: s._id,
       _id: s._id,
@@ -117,8 +119,8 @@ export default function ManageSales() {
       salesBreak: s.salesBreak ?? [],
       directSale: s.directSale ?? [],
       year: new Date(s.createdAt).getFullYear(),
-      adminStatus: s.adminStatus || "Pending",
-      status: s.adminStatus || "Pending",
+      adminStatus: status,
+      status: status,
       dropdownActions: ["View Details", "Accept Report", "Reject Report"],
     };
   });
@@ -132,7 +134,7 @@ export default function ManageSales() {
   const handleActionClick = (row: SalesDisplayRow, action: string) => {
     if (action === "Accept Report") {
       updateStatus.mutate(
-        { id: row._id, status: "Approved" },
+        { id: row._id, status: "approved" },
         {
           onSuccess: () => {
             setSuccessMessage("Report accepted successfully!");
@@ -142,7 +144,7 @@ export default function ManageSales() {
       );
     } else if (action === "Reject Report") {
       updateStatus.mutate(
-        { id: row._id, status: "Rejected" },
+        { id: row._id, status: "rejected" },
         {
           onSuccess: () => {
             setSuccessMessage("Report rejected.");
@@ -173,7 +175,7 @@ export default function ManageSales() {
   const pendingSellersCount = useMemo(() => {
     const pendingSellers = new Set(
       salesRows
-        .filter((row) => row.adminStatus === "Pending")
+        .filter((row) => row.adminStatus === "pending")
         .map((row) => row.seller)
     );
     return pendingSellers.size;
@@ -192,6 +194,7 @@ export default function ManageSales() {
           ...row,
           revenue: `$${row.revenue.toLocaleString()}`,
           profit: `$${row.profit.toLocaleString()}`,
+          status: row.status.charAt(0).toUpperCase() + row.status.slice(1),
         }))}
         statusColorMap={statusColorMap}
         enableActions
