@@ -59,7 +59,6 @@ export default function ManageSales() {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 15;
 
-  // Fetch token and set company ID
   useEffect(() => {
     const breaktoken = async () => {
       const tempData = await localStorage.getItem("userData");
@@ -132,11 +131,25 @@ export default function ManageSales() {
 
   const handleActionClick = (row: SalesDisplayRow, action: string) => {
     if (action === "Accept Report") {
-      updateStatus.mutate({ id: row._id, status: "Approved" });
-      setSuccessMessage("Report accepted successfully!");
+      updateStatus.mutate(
+        { id: row._id, status: "Approved" },
+        {
+          onSuccess: () => {
+            setSuccessMessage("Report accepted successfully!");
+            setTimeout(() => window.location.reload(), 1000);
+          },
+        }
+      );
     } else if (action === "Reject Report") {
-      updateStatus.mutate({ id: row._id, status: "Rejected" });
-      setSuccessMessage("Report rejected.");
+      updateStatus.mutate(
+        { id: row._id, status: "Rejected" },
+        {
+          onSuccess: () => {
+            setSuccessMessage("Report rejected.");
+            setTimeout(() => window.location.reload(), 1000);
+          },
+        }
+      );
     } else if (action === "View Details") {
       const originalRow = salesRows.find((r) => r._id === row._id);
       if (originalRow) {
