@@ -37,8 +37,7 @@ const updateSaleStatus = async ({
   id: string;
   status: string;
 }) => {
-  console.log(id,
-  status);
+   
   
   const res = await axios.put(
     `${BASE_URL}/${id}`,

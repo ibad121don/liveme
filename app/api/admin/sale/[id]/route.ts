@@ -29,7 +29,7 @@ export async function GET(
 // PUT: Update adminStatus of a sale
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string,status:string } }
 ) {
   try {
     await connectDB();
@@ -37,7 +37,7 @@ export async function PUT(
 
     const sale = await UnifiedSaleStream.findByIdAndUpdate(
       params.id,
-      { adminStatus: status },
+      { adminStatus: params.status },
       { new: true }
     );
 
