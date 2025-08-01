@@ -38,20 +38,9 @@ interface SalesRow {
   [key: string]: string | string[] | number | undefined;
 }
 
-interface SalesDisplayRow {
-  id: string;
-  _id: string;
-  date: string;
-  seller: string;
-  platform: string;
-  sales: number;
+interface SalesDisplayRow extends SalesRow {
   revenue: string;
   profit: string;
-  year: number;
-  adminStatus: "Pending" | "Approved" | "Rejected";
-  status: "Pending" | "Approved" | "Rejected";
-  dropdownActions?: string[];
-  [key: string]: string | string[] | number | undefined;
 }
 
 const statusColorMap = {
@@ -63,12 +52,28 @@ const statusColorMap = {
 export default function ManageSales() {
   const { sales, isLoading, isError, error, updateStatus } = useSales();
 
+  const [companyId, setCompanyId] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedSale, setSelectedSale] = useState<SalesRow | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 15;
-  const salesRows: SalesRow[] = sales.map((s: any) => {
+
+  // Fetch token and set company ID
+  useEffect(() => {
+    const breaktoken = async () => {
+      const tempData = await localStorage.getItem("userData");
+      if (tempData) {
+        const user = JSON.parse(tempData);
+        setCompanyId(user?.user?.companyId || null);
+      }
+    };
+    breaktoken();
+  }, []);
+
+  const filteredSales = sales.filter((s: any) => s.companyId === companyId);
+
+  const salesRows: SalesRow[] = filteredSales.map((s: any) => {
     const totalSalesFromBreaks =
       s.salesBreak?.reduce((acc: number, breakItem: any) => {
         return (
@@ -93,37 +98,19 @@ export default function ManageSales() {
 
     const totalUnitsSold = totalSalesFromBreaks + totalSalesFromDirect;
 
-    // Calculate total revenue
-    const totalRevenueFromBreaks =
-      s.salesBreak?.reduce((acc: number, item: any) => {
-        return acc + (item.totalCost || 0);
-      }, 0) || 0;
+    const totalRevenue =
+      (s.salesBreak?.reduce((acc: number, item: any) => acc + (item.totalCost || 0), 0) || 0) +
+      (s.directSale?.reduce((acc: number, item: any) => acc + (item.subtotal || 0), 0) || 0);
 
-    const totalRevenueFromDirect =
-      s.directSale?.reduce((acc: number, item: any) => {
-        return acc + (item.subtotal || 0);
-      }, 0) || 0;
-
-    const totalRevenue = totalRevenueFromBreaks + totalRevenueFromDirect;
-
-    // Calculate total profit
-    const totalProfitFromBreaks =
-      s.salesBreak?.reduce((acc: number, item: any) => {
-        return acc + (item.estimatedProfit || 0);
-      }, 0) || 0;
-
-    const totalProfitFromDirect =
-      s.directSale?.reduce((acc: number, item: any) => {
-        return acc + (item.estimatedProfit || 0);
-      }, 0) || 0;
-
-    const totalProfit = totalProfitFromBreaks + totalProfitFromDirect;
+    const totalProfit =
+      (s.salesBreak?.reduce((acc: number, item: any) => acc + (item.estimatedProfit || 0), 0) || 0) +
+      (s.directSale?.reduce((acc: number, item: any) => acc + (item.estimatedProfit || 0), 0) || 0);
 
     return {
       id: s._id,
       _id: s._id,
       date: new Date(s.createdAt).toLocaleDateString(),
-      seller: s.sellerId?.firstName || "Unknown Seller",
+      seller: s.sellerName || "Unknown Seller",
       platform: s.platform || "N/A",
       sales: totalUnitsSold,
       revenue: totalRevenue,
@@ -143,7 +130,6 @@ export default function ManageSales() {
     currentPage * pageSize + pageSize
   );
 
-  //  Accept, Reject, or View
   const handleActionClick = (row: SalesDisplayRow, action: string) => {
     if (action === "Accept Report") {
       updateStatus.mutate({ id: row._id, status: "Approved" });
@@ -160,7 +146,6 @@ export default function ManageSales() {
     }
   };
 
-  // Auto-close success toast
   useEffect(() => {
     if (successMessage) {
       const timeout = setTimeout(() => setSuccessMessage(""), 2000);
@@ -168,12 +153,10 @@ export default function ManageSales() {
     }
   }, [successMessage]);
 
-  // Calculate total revenue
   const totalRevenue = useMemo(() => {
     return salesRows.reduce((acc, row) => acc + (Number(row.revenue) || 0), 0);
   }, [salesRows]);
 
-  // Calculate unique pending sellers
   const pendingSellersCount = useMemo(() => {
     const pendingSellers = new Set(
       salesRows
@@ -184,15 +167,11 @@ export default function ManageSales() {
   }, [salesRows]);
 
   if (isLoading) return <div>Loading sales...</div>;
-  if (isError)
-    return <div>Error loading sales: {(error as Error).message}</div>;
+  if (isError) return <div>Error loading sales: {(error as Error).message}</div>;
 
   return (
     <div className="flex flex-col gap-6">
-      <SalesHeader
-        totalRevenue={totalRevenue}
-        pendingSellers={pendingSellersCount}
-      />
+      <SalesHeader totalRevenue={totalRevenue} pendingSellers={pendingSellersCount} />
 
       <DataTableCard<SalesDisplayRow>
         columns={salesColumns}
