@@ -62,6 +62,7 @@ export async function POST(req: NextRequest) {
     success: true,
     message: "Logged in successfully",
     token,
+    user
   });
 
   response.cookies.set("token", token, {
