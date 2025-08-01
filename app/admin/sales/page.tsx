@@ -8,7 +8,9 @@ import SuccessModal from "@/components/ui/SuccessModal";
 import StreamDetailsModal from "@/components/ui/StreamDetailsModal";
 import { useSales } from "@/hooks/admin/Sales/useSales";
 import { getAuthToken } from "@/lib/api";
-
+import jwt from "jsonwebtoken";
+ 
+const JWT_SECRET = process.env.JWT_SECRET!;
 const salesColumns = [
   { label: "Date", key: "date" },
   { label: "Seller", key: "seller" },
@@ -147,6 +149,16 @@ export default function ManageSales() {
 let breaktoken=async()=>{
   let token=await getAuthToken()
   console.log(token);
+   // Decode and verify token
+      let decoded: any;
+      try {
+        decoded = jwt.verify(token, JWT_SECRET);
+        console.log("sadjsdghjadsg",decoded);
+        
+      } catch (err) {
+       console.log(err);
+       
+      }
   
 }
   //  Accept, Reject, or View
