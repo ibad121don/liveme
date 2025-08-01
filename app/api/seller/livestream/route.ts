@@ -49,6 +49,7 @@ console.log({
       platform,
       companyId: datauser.companyId, // if you're storing this in the token
       sellerId: decoded.id,
+      sellerName:decoded.name
     });
 
     return NextResponse.json(
