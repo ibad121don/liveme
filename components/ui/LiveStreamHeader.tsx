@@ -18,6 +18,8 @@ let breaktoken=async()=>{
   const tempData =await localStorage.getItem("userData");
   if (tempData) {
     const user = JSON.parse(tempData);
+    console.log(user);
+    
     setCompanyId(user?.user?.name || null);
   }
   
