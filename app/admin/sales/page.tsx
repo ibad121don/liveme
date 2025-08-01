@@ -7,6 +7,7 @@ import SalesHeader from "@/components/ui/AdminSalesHeader";
 import SuccessModal from "@/components/ui/SuccessModal";
 import StreamDetailsModal from "@/components/ui/StreamDetailsModal";
 import { useSales } from "@/hooks/admin/Sales/useSales";
+import { getAuthToken } from "@/lib/api";
 
 const salesColumns = [
   { label: "Date", key: "date" },
@@ -142,7 +143,12 @@ export default function ManageSales() {
     currentPage * pageSize,
     currentPage * pageSize + pageSize
   );
-
+  useEffect(()=>{breaktoken()},[])
+let breaktoken=async()=>{
+  let token=await getAuthToken()
+  console.log(token);
+  
+}
   //  Accept, Reject, or View
   const handleActionClick = (row: SalesDisplayRow, action: string) => {
     if (action === "Accept Report") {
