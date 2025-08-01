@@ -26,7 +26,9 @@ export default function AccountSettings() {
 
   useEffect(() => {
     const token = localStorage.getItem("userData");
-    const decoded = token ? decodeJwt(token) : null;
+    let tempdata=JSON.parse(token)
+
+    const decoded = token ? decodeJwt(tempdata.token) : null;
 
     const decodedEmail = decoded?.email ?? "";
 
