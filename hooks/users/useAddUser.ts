@@ -12,7 +12,7 @@ const addUserApi = async (newUser: AddUserPayload): Promise<ApiResponse> => {
   const response = await fetch(`${BASE_URL}/api/super-admin/user`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json", 
       Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify(newUser),

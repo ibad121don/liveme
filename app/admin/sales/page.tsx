@@ -123,7 +123,7 @@ export default function ManageSales() {
       id: s._id,
       _id: s._id,
       date: new Date(s.createdAt).toLocaleDateString(),
-      seller: s.sellerId?.firstName || "Unknown Seller",
+      seller: s.sellerId?.name || "Unknown Seller",
       platform: s.platform || "N/A",
       sales: totalUnitsSold,
       revenue: totalRevenue,
