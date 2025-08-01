@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import DashboardFooter from "@/components/ui/DashboardFooter";
 import DataTableCard from "@/components/ui/DataTableCard";
 import AdminInventoryHeader from "@/components/ui/AdminInventoryHeader";
@@ -56,20 +56,36 @@ export default function InventoryPage() {
     updateItem,
     deleteItem,
   } = useInventory();
-
+const [companyId, setCompanyId] = useState<string | null>(null);
   const [selectedRow, setSelectedRow] = useState<InventoryRow | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
+useEffect(()=>{breaktoken()},[])
+let breaktoken=async()=>{
+  const tempData =await localStorage.getItem("userData");
+  if (tempData) {
+    const user = JSON.parse(tempData);
+    setCompanyId(user?.user?.companyId || null);
+  }
+  
 
+  
+  
+  
+}
   const pageSize = 15;
-  const inventoryRows: InventoryRow[] = data.map((item: any) => ({
-    ...item,
-    id: item._id,
-    dropdownActions: ["Edit Item", "Delete Item"],
-  }));
+  const inventoryRows: InventoryRow[] = companyId
+    ? data
+        .filter((item) => item.companyId === companyId)
+        .map((item) => ({
+          ...item,
+          id: item._id,
+          dropdownActions: ["Edit Item", "Delete Item"],
+        }))
+    : [];
 
   const totalPages = Math.ceil(inventoryRows.length / pageSize);
   const paginatedRows = inventoryRows.slice(
