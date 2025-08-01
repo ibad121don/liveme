@@ -38,7 +38,7 @@ console.log(status);
 
     const sale = await UnifiedSaleStream.findByIdAndUpdate(
       params.id,
-      { adminStatus: status },
+      { adminStatus: "approved" },
       { new: true }
     );
 
