@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Image from "next/image";
 import PrimaryButton from "./PrimaryButton";
 import plus from "@/public/plus-icon.svg";
@@ -12,7 +12,20 @@ interface LiveStreamHeaderProps {
 
 export default function LiveStreamHeader({ onCreate }: LiveStreamHeaderProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [companyId, setCompanyId] = useState<string | null>(null);
+  useEffect(()=>{breaktoken()},[])
+let breaktoken=async()=>{
+  const tempData =await localStorage.getItem("userData");
+  if (tempData) {
+    const user = JSON.parse(tempData);
+    setCompanyId(user?.user?.name || null);
+  }
+  
 
+  
+  
+  
+}
   return (
     <>
       <div className="flex justify-between items-center w-full bg-[#F9FAFB] py-4 flex-wrap gap-4">
@@ -42,6 +55,7 @@ export default function LiveStreamHeader({ onCreate }: LiveStreamHeaderProps) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onCreate={onCreate}
+        name={companyId}
       />
     </>
   );

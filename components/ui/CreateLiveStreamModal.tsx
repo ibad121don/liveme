@@ -7,6 +7,7 @@ import { createStream } from "@/lib/api";
 
 interface CreateLiveStreamModalProps {
   isOpen: boolean;
+  name:string;
   onClose: () => void;
   onCreate: (data: {
     streamTitle: string;
@@ -22,6 +23,7 @@ export default function CreateLiveStreamModal({
   isOpen,
   onClose,
   onCreate,
+  name,
 }: CreateLiveStreamModalProps) {
   const [streamTitle, setStreamTitle] = useState("");
   const [streamDate, setStreamDate] = useState("");
@@ -51,14 +53,11 @@ export default function CreateLiveStreamModal({
 
   const handleSubmit = async () => {
     if (!validate()) return;
-    const tempData =await localStorage.getItem("userData");
- 
-    const user = JSON.parse(tempData);
-    console.log("asdasjd");
+    
     
    
     
-    createStream({ streamTitle, date: streamDate, platform,name:user.user.name });
+    createStream({ streamTitle, date: streamDate, platform,name });
     // onCreate({ streamTitle, date: streamDate, platform });
     onClose();
   };
