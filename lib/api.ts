@@ -61,7 +61,7 @@ export async function createStream(data: {
     throw new Error("Unauthorized: No token available");
   }
 
-  const apiUrl = `${BASE_URL}/api/seller/livestream`;
+  const apiUrl = `/api/seller/livestream`;
   const res = await fetch(apiUrl, {
     method: "POST",
     headers: {
