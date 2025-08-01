@@ -51,16 +51,20 @@ export default function CreateLiveStreamModal({
 
   const handleSubmit = async () => {
     if (!validate()) return;
-    const tempData =await localStorage.getItem("userData");
  
+ 
+   const tempData =await localStorage.getItem("userData");
+  if (tempData) {
     const user = JSON.parse(tempData);
     console.log("asdasjd");
     
-    console.log({ streamTitle, date: streamDate, platform,name:user?.user?.name });
+   
     
     createStream({ streamTitle, date: streamDate, platform,name:user.user.name });
+      onClose();
+  }
     // onCreate({ streamTitle, date: streamDate, platform });
-    onClose();
+  
   };
 
   if (!isOpen) return null;
