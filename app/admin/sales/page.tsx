@@ -44,9 +44,9 @@ interface SalesDisplayRow extends SalesRow {
 }
 
 const statusColorMap = {
-  Pending: "#FACC15",
-  Approved: "#22C55E",
-  Rejected: "#EF4444",
+  pending: "#FACC15",
+  approved: "#22C55E",
+  rejected: "#EF4444",
 };
 
 export default function ManageSales() {
