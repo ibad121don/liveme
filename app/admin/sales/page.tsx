@@ -166,7 +166,7 @@ let breaktoken=async()=>{
     // console.log(row,action);
     
     if (action === "Accept Report") {
-      updateStatus.mutate({ id: row._id, status: "Approved" });
+      updateStatus.mutate({ id: row._id, status: "approved" });
       setSuccessMessage("Report accepted successfully!");
     } else if (action === "Reject Report") {
       updateStatus.mutate({ id: row._id, status: "Rejected" });
