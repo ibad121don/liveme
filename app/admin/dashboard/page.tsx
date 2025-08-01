@@ -55,9 +55,16 @@ export default function AdminDashboard() {
   useEffect(() => {
     setHasMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (sales && Array.isArray(sales)) {
+ 
+let breaktoken=async()=>{
+  const tempData =await localStorage.getItem("userData");
+  if (tempData) {
+    const user = JSON.parse(tempData);
+  
+     if (sales && Array.isArray(sales)) {
+       const filteredSales = sales.filter(
+    (sale) => sale.companyId === user?.user?.companyId
+  );
       const monthNames = [
         "Jan",
         "Feb",
@@ -78,7 +85,7 @@ export default function AdminDashboard() {
         {}
       );
 
-      sales.forEach((sale) => {
+      filteredSales.forEach((sale) => {
         const dateStr = sale.date || sale.createdAt;
         if (!dateStr) return;
         const date = new Date(dateStr);
@@ -98,6 +105,15 @@ export default function AdminDashboard() {
         setCounts(newCounts);
       }
     }
+  }
+  
+
+  
+  
+  
+}
+  useEffect(() => {
+   breaktoken()
   }, [sales]);
 
   useEffect(() => {
