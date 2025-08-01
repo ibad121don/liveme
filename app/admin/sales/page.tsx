@@ -163,7 +163,7 @@ let breaktoken=async()=>{
 }
   //  Accept, Reject, or View
   const handleActionClick = (row: SalesDisplayRow, action: string) => {
-    console.log(row,action);
+    // console.log(row,action);
     
     if (action === "Accept Report") {
       updateStatus.mutate({ id: row._id, status: "Approved" });
