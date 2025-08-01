@@ -8,7 +8,7 @@ const saleSchema = new mongoose.Schema({
   price: Number,
   quantity: Number,
   type: { type: String, enum: ['sale', 'pyt'], default: 'sale' }, 
- status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' }
+  status: { type: String, enum: ['pending', 'approved'], default: 'pending' }
 }, { timestamps: true });
 
 export default mongoose.models.Sale || mongoose.model('Sale', saleSchema);
