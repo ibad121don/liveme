@@ -48,34 +48,27 @@ export const fetchAllCompaniesApi = async (): Promise<any> => {
   return response.json();
 };
 
-export async function createStream(data: {
-  streamTitle: string;
-  date: string;
-  platform: string;
-}) {
-  const token = getAuthToken();
-  console.log(data);
-
-  if (!token) {
-    console.error("No auth token found");
-    throw new Error("Unauthorized: No token available");
+export const createCompanyApi = async (newCompanyData: any): Promise<any> => {
+  const authToken =await getAuthToken();
+  if (!authToken) {
+    throw new Error("Authentication token not found. Please log in.");
   }
 
-  const apiUrl = `/api/seller/livestream`;
-  const res = await fetch(apiUrl, {
+  const apiUrl = `https://liveme-three.vercel.app/api/super-admin/company`;
+  const response = await fetch(apiUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${authToken}`,
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(newCompanyData),
   });
 
-  const result = await res.json();
-  console.log(result);
-  if (!res.ok) throw new Error(result.error || "Failed to create stream");
-  return result.data;
-}
+  if (!response.ok) {
+    await handleApiError(response);
+  }
+  return response.json();
+};
 
 export const fetchCompanyByIdApi = async (companyId: string): Promise<any> => {
   const authToken = getAuthToken();
@@ -363,7 +356,6 @@ export async function createStream(data: {
   if (!res.ok) throw new Error(result.error || "Failed to create stream");
   return result.data;
 }
-
 /// break calculator
 
 export async function createBreakCalculation(data: BreakCalculationRequest) {
