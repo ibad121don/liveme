@@ -12,6 +12,7 @@ interface CreateLiveStreamModalProps {
     streamTitle: string;
     date: string;
     platform: string;
+    name:string;
   }) => void;
 }
 
@@ -50,7 +51,10 @@ export default function CreateLiveStreamModal({
 
   const handleSubmit = async () => {
     if (!validate()) return;
-    createStream({ streamTitle, date: streamDate, platform });
+    const tempData =await localStorage.getItem("userData");
+ 
+    const user = JSON.parse(tempData);
+    createStream({ streamTitle, date: streamDate, platform,name:user.user.name });
     // onCreate({ streamTitle, date: streamDate, platform });
     onClose();
   };

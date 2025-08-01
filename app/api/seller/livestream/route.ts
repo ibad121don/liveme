@@ -32,15 +32,9 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { streamTitle, date, platform } = body;
+    const { streamTitle, date, platform,name } = body;
     let datauser = await User.findById(decoded.id);
-console.log({
-      streamTitle,
-      date,
-      platform,
-      companyId: datauser.companyId, // if you're storing this in the token
-      sellerId: decoded.id,
-    });
+ 
 
     // You can now access decoded fields like decoded.userId, decoded.companyId, etc.
     const newStream = await UnifiedSaleStream.create({
@@ -49,7 +43,7 @@ console.log({
       platform,
       companyId: datauser.companyId, // if you're storing this in the token
       sellerId: decoded.id,
-      sellerName:decoded.name
+      sellerName:name
     });
 
     return NextResponse.json(

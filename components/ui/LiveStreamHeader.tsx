@@ -7,7 +7,7 @@ import plus from "@/public/plus-icon.svg";
 import CreateLiveStreamModal from "./CreateLiveStreamModal";
 
 interface LiveStreamHeaderProps {
-  onCreate: (data: { streamTitle: string; date: string; platform: string }) => void;
+  onCreate: (data: { streamTitle: string; date: string; platform: string,name:string }) => void;
 }
 
 export default function LiveStreamHeader({ onCreate }: LiveStreamHeaderProps) {
